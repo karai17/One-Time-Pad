@@ -1,109 +1,38 @@
 body {
-	background: url('background.jpg') no-repeat fixed left bottom;
-	color: #ffffff;
-	font-family: Times New Roman;
+	background: #181818;
+	color: white;
+	font-family: Liberation Sans, Helvetica, Arial, sans-serif;
 	font-size: 10pt;
-	font-variant: small-caps;
-	letter-spacing: 3px;
 	margin: 0;
-	padding: 40px;
+	padding: 0;
 }
 
-label {
-	font-size: 200%;
-}
-
-label span {
-	cursor: help;
-}
-
-textarea, button, #capsule {
-	-webkit-box-shadow: #000000 0px 0px 7px;
-	-moz-box-shadow: #000000 0px 0px 7px;
-	box-shadow: #000000 0px 0px 7px;
-	border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-textarea, button {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	background: rgba(0, 0, 0, 0.25);
-	color: #ffffff;
-	text-shadow: 2px 2px 1px #000000;
-}
+label {font-size: 110%;}
 
 textarea {
 	font-family: Courier New, System;
 	font-size: 160%;
-	height: 161px;
 	margin: 5px 0 20px 0;
-	padding: 5px;
-	width: 750px;
-}
-
-textarea:hover, .active {
-	background: rgba(0, 0, 0, 0.35);
+	height: 100px;
+	width: 100%;
+	padding: 0;
+	border: 0;
 }
 
 button {
-	background: -moz-linear-gradient(
-		top,
-		rgba(0, 0, 0, 0.5) 0%,
-		rgba(0, 0, 0, 0.15) 50%,
-		rgba(0, 0, 0, 0.5) 100%
-	);
-	background: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0%,rgba(0, 0, 0, 0.35)),
-		color-stop(50%,rgba(0, 0, 0, 0.1)),
-		color-stop(100%,rgba(0, 0, 0, 0.35))
-	);
-	font-family: Times New Roman;
-	font-size: 200%;
-	font-variant: small-caps;
-	letter-spacing: 3px;
+	font-size: 110%;
 	height: 50px;
 	width: 150px;
-}
-
-button:hover {
-	background: rgba(0, 0, 0, 0.75);
-	background: -moz-linear-gradient(
-		top,
-		rgba(0, 0, 0, 0.75) 0%,
-		rgba(0, 0, 0, 0.40) 50%,
-		rgba(0, 0, 0, 0.75) 100%
-	);
-	background: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0%,rgba(0, 0, 0, 0.5)),
-		color-stop(50%,rgba(0, 0, 0, 0.25)),
-		color-stop(100%,rgba(0, 0, 0, 0.5))
-	);
+	padding: 0;
 }
 
 #capsule {
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	border-radius: 20px;
-	background: rgba(0, 0, 0, 0.25);
 	margin: 0 auto;
 	padding: 20px;
 	position: relative;
-	text-shadow: 2px 2px 1px #000000;
-	width: 760px;
+	width: 100%;
+	min-width: 480px;
+	max-width: 760px;
 }
 
-#encrypt {
-	margin: 0 20px 0 0;
-}
-
-#reset {
-	position: absolute;
-	right: 20px;
-}
+#encrypt, #decrypt {margin: 0 11px 0 0;}

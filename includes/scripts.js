@@ -1,66 +1,7 @@
 $(document).ready(function(){
-	const A			= 65;
-	const Z			= 90;
-	const CHARSET	= 26;
-	
-	/**
-	 *	Only Allow Letters To Be Typed
-	 */
-	$('textarea').alpha();
-	
-	/**
-	 *	Focus on Text Box
-	 */
-	$('textarea').focus(function(){
-		$(this).addClass('active');
-	});
-	
-	/**
-	 *	Blur on Text Box
-	 */
-	$('textarea').blur(function(){
-		$(this).removeClass('active');
-	});
-	
-	/**
-	 *	Typing in Text Box
-	 */
-	$('textarea').keyup(function(){
-		$(this).val(formatText($(this).val()));
-	});
-	
-	/**
-	 *	Input Help
-	 */
-	$('#input_help').click(function(){
-		alert(
-			"If you are encrypting a message, place your plaintext message here.\r\n\r\n" +
-			"If you are decrypting a message, place your encrypted message here.\r\n\r\n" +
-			"This field is always required."
-		);
-	});
-	
-	/**
-	 *	Secret Key Help
-	 */
-	$('#key_help').click(function(){
-		alert(
-			"Always place your secret key here.\r\n\r\n" +
-			"This field is required if you are decrypting a message.\r\n\r\n" +
-			"If you leave this field blank while encrypting a message, a key will be generated for you.\r\n\r\n" +
-			"If this field is shorter than the Input Message, your action will not execute."
-		);
-	});
-	
-	/**
-	 *	Output Help
-	 */
-	$('#output_help').click(function(){
-		alert(
-			"The output of your action will always be placed here.\r\n\r\n" +
-			"This field is never required and always over written upon successful execution of an action."
-		);
-	});
+	const A			= 65; // ASCII value for A
+	const Z			= 90; // ASCII value for Z
+	const CHARSET	= 26; // Length of Alphabet
 	
 	/**
 	 *	Cleanse Text
@@ -68,10 +9,9 @@ $(document).ready(function(){
 	 *	@param txt			Text to cleanse
 	 *	@return				Cleansed text
 	 */
-	function cleanseText(txt)
-	{
-		//-- Return only alpha characters --
-		return txt.replace(/[^a-z]+/gi,'');
+	function cleanseText(txt){
+		txt = txt.toUpperCase();
+		return txt.replace(/[^a-z]+/gi, '');
 	}
 	
 	/**
@@ -80,15 +20,11 @@ $(document).ready(function(){
 	 *	@param txt			Text to format
 	 *	@return				Formatted text
 	 */
-	function formatText(txt)
-	{
+	function formatText(txt){
 		var tmp	= '';
-		txt		= txt.toUpperCase();
-		txt		= cleanseText(txt);
 		
 		//-- Separate string into groups of 5 letters --
-		for(var i = 0; i < txt.length; i++)
-		{
+		for(var i = 0; i < txt.length; i++){
 			tmp += txt[i];
 			
 			if(i % 5 == 4)
@@ -99,113 +35,118 @@ $(document).ready(function(){
 	}
 	
 	/**
+	 *	Detect Errors
+	 *
+	 *	@param msg			Input
+	 *	@param key			Secret key
+	 *	@param button		Which button was pressed
+	 *	@return				true: errors
+	 *						false: no errors
+	 */
+	function detectErrors(msg, key, button){
+		//-- If no message, warn user --
+		if(msg.length < 1){
+			alert('Input Required');
+			return true;
+		}
+		
+		//-- If no key available --
+		if((key.length < 1) && (button == 'decrypt')){
+			alert('Key Required');
+			return true;
+		}
+		
+		//-- If key is too short, warn user --
+		if((msg.length > key.length)){
+			alert('Invalid Key');
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 *	Generate Secret Key
 	 *
 	 *	@param txt			Text to determine key length
 	 *	@return				Secret key
 	 */
-	function generateKey(txt)
-	{
+	function generateKey(txt){
 		var key = '';
 		
 		//-- Generate secret key with same length as message --
 		for(var i = 0; i < txt.length; i++)
-			key	+= String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+			key	+= String.fromCharCode(Math.floor(Math.random() * CHARSET) + A);
 		
 		return key;
 	}
+		
+	//-- Only Allow Letters To Be Typed --
+	$('textarea').alpha();
 	
-	/**
-	 *	Encrypt Input
-	 */
-	$('#encrypt').click(function(){
+	//-- Encrypt, Decrypt Input --
+	$('#encrypt, #decrypt').click(function(){
 		//-- Get Inputs --
+		var btn = $(this).attr('id');
 		var msg	= cleanseText($('#input').val());
 		var key	= cleanseText($('#key').val());
 		var out	= '';
 		
-		//-- If no message, warn user --
-		if(msg.length < 1)
-			alert('You need to enter a message before you can encrypt it!');
-		else
-		{
-			//-- If no key available, generate one --
+		//-- Encrypt Input --
+		if(btn == 'encrypt'){
+			//-- If no key, generate key --
 			if(key.length < 1)
-				key	= generateKey(msg);
-			
-			//-- If key is too short, warn user --
-			if(msg.length > key.length)
-				alert('Your secret key is not long enough to encrypt your message. Please use a different key or delete your key to generate a new key.');
-			else
-			{
+				key = generateKey(msg);
+				
+			//-- Check for errors --
+			if(!detectErrors(msg, key, btn)){
 				//-- Encrypt msg with key --
-				for(var i = 0; i < msg.length; i++)
-				{
+				for(var i = 0; i < msg.length; i++){
 					var msgTmp	= msg[i].charCodeAt();
 					var keyTmp	= key[i].charCodeAt();
-					var tmp		= msgTmp + keyTmp - 64;
+					var tmp		= msgTmp + keyTmp - (A - 1);
 					
-					//-- Roll over if value passes 'Z' --
-					if(tmp > 90)
-						tmp	-= 26;
+					//-- Roll over if value passes Z --
+					if(tmp > Z)
+						tmp	-= CHARSET;
 					
-					out			+= String.fromCharCode(tmp);
+					out += String.fromCharCode(tmp);
 				}
 				
 				//-- Display output(s) --
+				$('#input').val(formatText(msg));
 				$('#key').val(formatText(key));
 				$('#output').val(formatText(out));
 			}
 		}
-	});
-	
-	/**
-	 *	Decrypt Input
-	 */
-	$('#decrypt').click(function(){
-		//-- Get Inputs --
-		var msg	= cleanseText($('#input').val());
-		var key	= cleanseText($('#key').val());
-		var out	= '';
 		
-		//-- If no message, warn user --
-		if(msg.length < 1)
-			alert('You need to enter a message before you can decrypt it!');
-		else
-		{
-			//-- If no key available, generate one --
-			if(key.length < 1)
-				alert('A secret key is required to decrypt a message.');
-			
-			//-- If key is too short, warn user --
-			else if(msg.length > key.length)
-				alert('Your secret key is not long enough to decrypt your message. Please use a different key.');
-			else
-			{
+		//-- Decrypt Input --
+		else if(btn == 'decrypt'){
+			//-- Check for errors --
+			if(!detectErrors(msg, key, btn)){
 				//-- Decrypt msg with key --
 				for(var i = 0; i < msg.length; i++)
 				{
 					var msgTmp	= msg[i].charCodeAt();
 					var keyTmp	= key[i].charCodeAt();
-					var tmp		= msgTmp - keyTmp + 64;
+					var tmp		= msgTmp - keyTmp + (A - 1);
 					
-					//-- Roll over if value passes 'A' --
-					if(tmp < 65)
-						tmp	+= 26;
+					//-- Roll over if value passes A --
+					if(tmp < A)
+						tmp	+= CHARSET;
 					
-					out			+= String.fromCharCode(tmp);
+					out += String.fromCharCode(tmp);
 				}
 				
 				//-- Display output(s) --
+				$('#input').val(formatText(msg));
 				$('#key').val(formatText(key));
 				$('#output').val(formatText(out));
 			}
 		}
 	});
 	
-	/**
-	 *	Reset Fields
-	 */
+	//-- Reset Fields --
 	$('#reset').click(function(){
 		$('textarea').val('');
 	});
