@@ -1,0 +1,38 @@
+body {
+	background: #181818;
+	color: white;
+	font-family: Liberation Sans, Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+	margin: 0;
+	padding: 0;
+}
+
+label {font-size: 110%;}
+
+textarea {
+	font-family: Courier New, System;
+	font-size: 160%;
+	margin: 5px 0 20px 0;
+	height: 100px;
+	width: 100%;
+	padding: 0;
+	border: 0;
+}
+
+button {
+	font-size: 110%;
+	height: 50px;
+	width: 150px;
+	padding: 0;
+}
+
+#capsule {
+	margin: 0 auto;
+	padding: 20px;
+	position: relative;
+	width: 100%;
+	min-width: 480px;
+	max-width: 760px;
+}
+
+#encrypt, #decrypt {margin: 0 11px 0 0;}
